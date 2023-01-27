@@ -1,8 +1,10 @@
 from model.models import VoronoiModel
+from model.models import DelaunayModel
 from preprocessing import PointsGenerater
 from display import Displayer
 import numpy as np
 from table import Table
+
 class Tesselation:
 
     def __init__(self, points=None):

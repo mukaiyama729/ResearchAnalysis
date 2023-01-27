@@ -91,4 +91,3 @@ class Table:
     def take_higher(p_v_dict, per):
         higher = np.percentile(np.array(list(p_v_dict.values())), per)
         return dict(filter(lambda item: item[1] > higher, p_v_dict.items()))
-
