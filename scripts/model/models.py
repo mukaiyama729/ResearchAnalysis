@@ -49,7 +49,7 @@ class VoronoiModel:
             region = self.regions[self.point_region[i]]
             if -1 in tuple(region):
                 ch = ConvexHull(self.vertices[region])
-                self.all_volumes[i], self.all_CHes = 0, ch
+                self.all_volumes[i], self.all_CHes[i] = 0, ch
                 self.cleaned_points.append(i)
                 continue
             ch = ConvexHull(self.vertices[region])
@@ -148,7 +148,6 @@ class KernelDesityEstimation:
 
     def density_estimation(self):
         self.kde = gaussian_kde(self.transposed_points)
-        print(self.kde)
         for num, point in tqdm.tqdm(enumerate(self.points)):
-            self.density_dict[num] = self.kde.evaluate(point)
+            self.density_dict[num] = self.kde.evaluate(point)[0]
         return self.density_dict

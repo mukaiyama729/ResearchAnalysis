@@ -49,7 +49,7 @@ class Table:
                     i
                 ]
                 counter += 1
-            self.v_table = self.v_table.apply(pd.to_numeric)
+            self.v_table[['volume', 'convex_hull_index(index_of_point)']] = self.v_table[['volume', 'convex_hull_index(index_of_point)']].apply(pd.to_numeric)
             return self.v_table
 
         elif self.model_name == 'KDE':
@@ -63,7 +63,7 @@ class Table:
                     index,
                     self.model.points[index]
                 ]
-            self.kde_table = self.kde_table.apply(pd.to_numeric)
+            self.kde_table[['density', 'point_index']] = self.kde_table[['density', 'point_index']].apply(pd.to_numeric)
             return self.kde_table
 
     def is_table(self):
