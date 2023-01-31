@@ -1,5 +1,6 @@
 import pandas as pd
 from scipy.spatial import ConvexHull
+import numpy as np
 
 
 class Table:

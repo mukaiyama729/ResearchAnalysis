@@ -48,6 +48,9 @@ class VoronoiModel:
         for i in tqdm.tqdm(range(num_of_points)):
             region = self.regions[self.point_region[i]]
             if -1 in tuple(region):
+                ch = ConvexHull(self.vertices[region])
+                self.all_volumes[i], self.all_CHes = 0, ch
+                self.cleaned_points.append(i)
                 continue
             ch = ConvexHull(self.vertices[region])
             self.all_volumes[i], self.all_CHes[i] = ch.volume, ch

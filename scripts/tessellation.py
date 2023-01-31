@@ -1,5 +1,6 @@
 from .model.models import VoronoiModel
 from .model.models import DelaunayModel
+from .model.models import KernelDesityEstimation
 from .preprocessing import PointsGenerater
 from .display import Displayer
 import numpy as np

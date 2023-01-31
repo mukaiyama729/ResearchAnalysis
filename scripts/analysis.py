@@ -38,6 +38,15 @@ class Analyzer(Tessellation):
         self.v_result = merged_table
         return merged_table
 
-    def low_density_datas(self):
+    def high_volume_d_point(self, percent=10):
+        self.arranger = ArrangeData(self.d_result)
+        return self.arranger.sorted_points_of_high_volume(percent)
+
+    def high_volume_d_trajectories(self):
+        self.arranger = ArrangeData(self.d_result)
+        return self.arranger.averaged_trajectory_data()
+
+    def is_model(self):
         pass
+
 
