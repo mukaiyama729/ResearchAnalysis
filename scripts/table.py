@@ -27,6 +27,7 @@ class Table:
                     self.model.point_volume_dict[i],
                     i
                 ]
+            self.d_table = self.d_table.apply(pd.to_numeric)
             return self.d_table
 
         elif self.model_name == 'Voronoi':
@@ -47,6 +48,7 @@ class Table:
                     i
                 ]
                 counter += 1
+            self.v_table = self.v_table.apply(pd.to_numeric)
             return self.v_table
 
         elif self.model_name == 'KDE':
@@ -60,6 +62,7 @@ class Table:
                     index,
                     self.model.points[index]
                 ]
+            self.kde_table = self.kde_table.apply(pd.to_numeric)
             return self.kde_table
 
     def is_table(self):

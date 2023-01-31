@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 from .tessellation import Tessellation
 from .load_file import FileLoader
+from .arrange_data import ArrangeData
 
 class Analyzer(Tessellation):
 
@@ -36,3 +37,7 @@ class Analyzer(Tessellation):
         merged_table = pd.merge(self.data, calculated_table, how='outer', left_index=True, right_index=True)
         self.v_result = merged_table
         return merged_table
+
+    def low_density_datas(self):
+        pass
+
