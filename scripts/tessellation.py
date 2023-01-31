@@ -1,11 +1,11 @@
-from model.models import VoronoiModel
-from model.models import DelaunayModel
-from preprocessing import PointsGenerater
-from display import Displayer
+from .model.models import VoronoiModel
+from .model.models import DelaunayModel
+from .preprocessing import PointsGenerater
+from .display import Displayer
 import numpy as np
-from table import Table
+from .table import Table
 
-class Tesselation:
+class Tessellation:
 
     def __init__(self, points=None):
         self.points = points #生データ
