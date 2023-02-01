@@ -48,3 +48,9 @@ class FileLoader:
     @classmethod
     def extract_file_name_info(cls, file_name):
         return re.findall(r'\d+', file_name)
+
+class FileSaver:
+
+    @staticmethod
+    def pd_to_csv(df, path):
+        pass
