@@ -80,9 +80,13 @@ class Analyzer(Tessellation):
         df.to_csv(directory_path + file_name)
 
     def calculate_all_model(self):
+        print(1)
         self.create_delaunay_data()
+        print(2)
         self.create_voronoi_data()
+        print(3)
         self.create_kde_data()
+        print(4)
 
     def save_all_data(self, directory_path, instance_file_name, d_file_name, v_file_name, kde_file_name, data_file_name):
         self.calculate_all_model()
