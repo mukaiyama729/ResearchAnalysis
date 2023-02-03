@@ -4,9 +4,9 @@ from scipy import stats
 
 class PointsGenerater:
 
-    def  __init__(self, points=None):
+    def  __init__(self, points):
         self.points = points
-        if not self.points:
+        if len(self.points) == 0:
             self.points = self.cone_random_gen()
 
     def random_generate(self, d, m):
@@ -72,8 +72,8 @@ class PointsGenerater:
         return
 
     def normalization(self):
-        #計算量を下げるため真ん中に寄せて、平均値で縮小
-        return (self.points - np.mean(self.points)) / np.mean(self.points)
+        #計算量を下げるため真ん中に寄せる
+        return (self.points - np.mean(self.points)) * 100
 
 class BoxSetter:
 

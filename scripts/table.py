@@ -1,5 +1,6 @@
 import pandas as pd
 from scipy.spatial import ConvexHull
+import numpy as np
 
 
 class Table:
@@ -27,6 +28,7 @@ class Table:
                     self.model.point_volume_dict[i],
                     i
                 ]
+            self.d_table = self.d_table.apply(pd.to_numeric)
             return self.d_table
 
         elif self.model_name == 'Voronoi':
@@ -47,6 +49,7 @@ class Table:
                     i
                 ]
                 counter += 1
+            self.v_table[['volume', 'convex_hull_index(index_of_point)']] = self.v_table[['volume', 'convex_hull_index(index_of_point)']].apply(pd.to_numeric)
             return self.v_table
 
         elif self.model_name == 'KDE':
@@ -60,6 +63,7 @@ class Table:
                     index,
                     self.model.points[index]
                 ]
+            self.kde_table[['density', 'point_index']] = self.kde_table[['density', 'point_index']].apply(pd.to_numeric)
             return self.kde_table
 
     def is_table(self):
@@ -91,4 +95,3 @@ class Table:
     def take_higher(p_v_dict, per):
         higher = np.percentile(np.array(list(p_v_dict.values())), per)
         return dict(filter(lambda item: item[1] > higher, p_v_dict.items()))
-

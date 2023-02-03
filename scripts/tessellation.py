@@ -1,9 +1,12 @@
-from model.models import VoronoiModel
-from preprocessing import PointsGenerater
-from display import Displayer
+from .model.models import VoronoiModel
+from .model.models import DelaunayModel
+from .model.models import KernelDesityEstimation
+from .preprocessing import PointsGenerater
+from .display import Displayer
 import numpy as np
-from table import Table
-class Tesselation:
+from .table import Table
+
+class Tessellation:
 
     def __init__(self, points=None):
         self.points = points #生データ

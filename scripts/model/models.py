@@ -6,6 +6,8 @@ from scipy.spatial import Voronoi, Delaunay, ConvexHull
 import random
 import scipy
 from scipy import stats
+import tqdm
+from scipy.stats import gaussian_kde
 
 class VoronoiModel:
 
@@ -43,10 +45,13 @@ class VoronoiModel:
     def cal_volume(self):
         num_of_points = len(self.points)
 
-        for i in range(num_of_points):
+        for i in tqdm.tqdm(range(num_of_points)):
             region = self.regions[self.point_region[i]]
-            #if -1 in tuple(region):
-                #continue
+            if -1 in tuple(region):
+                ch = ConvexHull(self.vertices[region])
+                self.all_volumes[i], self.all_CHes[i] = 0, ch
+                self.cleaned_points.append(i)
+                continue
             ch = ConvexHull(self.vertices[region])
             self.all_volumes[i], self.all_CHes[i] = ch.volume, ch
             self.cleaned_points.append(i)
@@ -71,7 +76,7 @@ class DelaunayModel:
             self.all_CHes = self._return_CHes()
             #convexの体積の辞書key:三角形のインデックる,value:その三角形の体積
             self.all_volumes = dict()
-            #あるpointのnum(key)に足してそれが属する三角形の体積のリスト(value)
+            #あるpointのnum(key)に足してそれが属する三角形の体積のリスト(value)、上から番号を付与している
             self.dict_of_points_and_volumes
             #あるpointのnum(key)にたいしてそれが属する三角形の体積全ての平均値(value)
             self.point_volume_dict
@@ -110,15 +115,20 @@ class DelaunayModel:
             for point_num in ver:
                 self.dict_of_points_and_volumes[point_num].append(self.all_volumes[volume_num])
 
-        for num ,value in self.dict_of_points_and_volumes.items():
+        for num ,value in tqdm.tqdm(self.dict_of_points_and_volumes.items()):
             how_many = len(value)
-            self.point_volume_dict[num] = sum(value) / how_many
+            try:
+                self.point_volume_dict[num] = sum(value) / how_many
+            except ZeroDivisionError:
+                print(num)
+                self.point_volume_dict[num] = 0
 
     def make_empty_dict(self):
         dict_of_points_and_volumes = dict()
         for i in range(len(self.points)):
             dict_of_points_and_volumes[i] = []
         return dict_of_points_and_volumes
+
 
 
 class KernelDesityEstimation:
@@ -138,7 +148,6 @@ class KernelDesityEstimation:
 
     def density_estimation(self):
         self.kde = gaussian_kde(self.transposed_points)
-        print(self.kde)
-        for num, point in enumerate(self.points):
-            self.density_dict[num] = self.kde.evaluate(point)
+        for num, point in tqdm.tqdm(enumerate(self.points)):
+            self.density_dict[num] = self.kde.evaluate(point)[0]
         return self.density_dict
