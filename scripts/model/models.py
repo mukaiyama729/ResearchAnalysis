@@ -120,7 +120,6 @@ class DelaunayModel:
             try:
                 self.point_volume_dict[num] = sum(value) / how_many
             except ZeroDivisionError:
-                print(num)
                 self.point_volume_dict[num] = 0
 
     def make_empty_dict(self):
