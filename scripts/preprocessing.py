@@ -73,7 +73,7 @@ class PointsGenerater:
 
     def normalization(self):
         #計算量を下げるため真ん中に寄せる
-        return (self.points - np.mean(self.points)) * 100
+        return (self.points - np.mean(self.points, axis=0))
 
 class BoxSetter:
 

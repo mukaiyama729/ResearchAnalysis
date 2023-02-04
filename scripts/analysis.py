@@ -90,7 +90,7 @@ class Analyzer(Tessellation):
 
     def save_all_data(self, directory_path, instance_file_name, d_file_name, v_file_name, kde_file_name, data_file_name):
         self.calculate_all_model()
-        self.save_instance(directory_path, instance_file_name)
+        #self.save_instance(directory_path, instance_file_name)
         self.save_data(self.d_result, directory_path, d_file_name)
         self.save_data(self.v_result, directory_path, v_file_name)
         self.save_data(self.kde_result, directory_path, kde_file_name)

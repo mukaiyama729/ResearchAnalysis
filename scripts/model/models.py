@@ -8,6 +8,7 @@ import scipy
 from scipy import stats
 import tqdm
 from scipy.stats import gaussian_kde
+from sklearn import neighbors
 
 class VoronoiModel:
 
@@ -145,8 +146,20 @@ class KernelDesityEstimation:
         self.kde = None
         self.name = 'KDE'
 
-    def density_estimation(self):
-        self.kde = gaussian_kde(self.transposed_points)
-        for num, point in tqdm.tqdm(enumerate(self.points)):
-            self.density_dict[num] = self.kde.evaluate(point)[0]
-        return self.density_dict
+    def density_estimation(self, alg='none', model='gaussian'):
+        if alg == 'none':
+            self.kde = gaussian_kde(self.transposed_points)
+            for num, point in tqdm.tqdm(enumerate(self.points)):
+                self.density_dict[num] = self.kde.evaluate(point)[0]
+            return self.density_dict
+        elif alg == 'kd_tree':
+            self.kde = neighbors.KernelDensity(
+                kernel=model,
+                algorithm=alg,
+                bandwidth=len(self.points)**(-1./self.points.shape[1])
+                ).fit(self.points)
+            indices = [index for index in range(len(self.points))]
+            self.density_dict = dict(zip(indices, list(np.exp(self.kde.score_samples(self.points)))))
+            return self.density_dict
+
+

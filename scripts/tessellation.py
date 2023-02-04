@@ -93,7 +93,7 @@ class Tessellation:
         model = KernelDesityEstimation(
             PointsGenerater(self.points).normalization()
         )
-        self.kde_density = model.density_estimation()
+        self.kde_density = model.density_estimation(alg='kd_tree', model='gaussian')
         self.kde_function = model.kde
         self.kde_model = model
         self.model_points = model.points
