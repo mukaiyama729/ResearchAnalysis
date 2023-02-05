@@ -156,7 +156,7 @@ class KernelDesityEstimation:
             self.kde = neighbors.KernelDensity(
                 kernel=model,
                 algorithm=alg,
-                bandwidth=len(self.points)**(-1./self.points.shape[1])
+                bandwidth='scott',
                 ).fit(self.points)
             indices = [index for index in range(len(self.points))]
             self.density_dict = dict(zip(indices, list(np.exp(self.kde.score_samples(self.points)))))
