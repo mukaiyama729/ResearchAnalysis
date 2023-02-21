@@ -89,11 +89,11 @@ class Tessellation:
         table = Table(self.d_model).make_table()
         return table
 
-    def kernel_density_estimation(self):
+    def kernel_density_estimation(self, kernel):
         model = KernelDesityEstimation(
             PointsGenerater(self.points).normalization()
         )
-        self.kde_density = model.density_estimation(alg='kd_tree', model='epanechnikov')
+        self.kde_density = model.density_estimation(alg='ball_tree', model=kernel)
         self.kde_function = model.kde
         self.kde_model = model
         self.model_points = model.points

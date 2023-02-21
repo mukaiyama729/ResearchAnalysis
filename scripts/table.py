@@ -32,6 +32,7 @@ class Table:
             return self.d_table
 
         elif self.model_name == 'Voronoi':
+            print('d')
             self.v_table = pd.DataFrame(
                 columns=['volume',
                         'vertices',
@@ -40,6 +41,7 @@ class Table:
                         ],
                 index=[i for i in range(len(self.model.cleaned_points))]
             )
+            print('b')
             counter = 0
             for i in self.model.cleaned_points:
                 self.v_table.iloc[counter,:] = [
@@ -49,6 +51,7 @@ class Table:
                     i
                 ]
                 counter += 1
+            print('c')
             self.v_table[['volume', 'convex_hull_index(index_of_point)']] = self.v_table[['volume', 'convex_hull_index(index_of_point)']].apply(pd.to_numeric)
             return self.v_table
 

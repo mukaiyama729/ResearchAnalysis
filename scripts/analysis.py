@@ -10,17 +10,25 @@ import pickle
 from .tessellation import Tessellation
 from .load_file import FileLoader
 from .arrange_data import ArrangeData
+import time
 
 
 class Analyzer(Tessellation):
 
-    def __init__(self, directory_path):
-        self.data = pd.DataFrame(FileLoader.construct_data(directory_path), columns=['time', 'x', 'y', 'z', 'trial', 'cycle', 'reprica'])
-        self.points = np.array(self.data.loc[:, ['x', 'y', 'z']], dtype='float')
-        super().__init__(self.points)
+    def __init__(self):
+        self.points = None
         self.d_result = None
         self.v_result = None
         self.kde_result = None
+
+    def load_file(self, directory_path):
+        self.data = pd.DataFrame(FileLoader.construct_data(directory_path), columns=['time', 'x', 'y', 'z', 'trial', 'cycle', 'reprica'])
+        self.points = np.array(self.data.loc[:, ['x', 'y', 'z']], dtype='float')
+        super().__init__(self.points)
+
+    def load_array(self, arr):
+        self.points = arr
+        super().__init__(self.points)
 
     def create_delaunay_data(self):
         self.delaunay_cal()
@@ -28,8 +36,8 @@ class Analyzer(Tessellation):
         merged_table = pd.merge(self.data, calculated_table, how='outer', left_index=True, right_index=True)
         self.d_result = merged_table
 
-    def create_kde_data(self):
-        self.kernel_density_estimation()
+    def create_kde_data(self, kernel='gaussiann'):
+        self.kernel_density_estimation(kernel=kernel)
         calculated_table = self.kde_show_data()
         merged_table = pd.merge(self.data, calculated_table, how='outer', left_index=True, right_index=True)
         self.kde_result = merged_table
@@ -37,6 +45,7 @@ class Analyzer(Tessellation):
     def create_voronoi_data(self):
         self.voronoi_cal()
         calculated_table = self.v_show_data()
+        print('a')
         merged_table = pd.merge(self.data, calculated_table, how='outer', left_index=True, right_index=True)
         self.v_result = merged_table
 
@@ -80,17 +89,22 @@ class Analyzer(Tessellation):
         df.to_csv(directory_path + file_name)
 
     def calculate_all_model(self):
-        print(1)
+        print('d')
+        s = time.time()
         self.create_delaunay_data()
-        print(2)
+        print(time.time() - s)
+        print('v')
+        s = time.time()
         self.create_voronoi_data()
-        print(3)
-        self.create_kde_data()
-        print(4)
+        print(time.time() - s)
+        print('kde')
+        s = time.time()
+        self.create_kde_data(kernel='epanechnikov')
+        print(time.time() - s)
 
     def save_all_data(self, directory_path, instance_file_name, d_file_name, v_file_name, kde_file_name, data_file_name):
         self.calculate_all_model()
-        #self.save_instance(directory_path, instance_file_name)
+        self.save_instance(directory_path, instance_file_name)
         self.save_data(self.d_result, directory_path, d_file_name)
         self.save_data(self.v_result, directory_path, v_file_name)
         self.save_data(self.kde_result, directory_path, kde_file_name)
