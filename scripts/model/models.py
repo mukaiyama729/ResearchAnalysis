@@ -8,6 +8,7 @@ import scipy
 from scipy import stats
 import tqdm
 from scipy.stats import gaussian_kde
+from sklearn import neighbors
 
 class VoronoiModel:
 
@@ -95,23 +96,26 @@ class DelaunayModel:
         self.name = 'Delaunay'
 
     def _return_CHes(self):
+        print('ch')
         regions = dict()
         ch = ConvexHull
-        for i, j in enumerate(self.simplices):
+        for i, j in tqdm.tqdm(enumerate(self.simplices)):
             regions[i] = ch(
                 self.points[j]
             )
         return regions
 
     def cal_volume(self):
+        print('volume_cal')
         num_of_simplices = len(self.simplices)
-        for i in range(num_of_simplices):
+        for i in tqdm.tqdm(range(num_of_simplices)):
             self.all_volumes[i] = self.all_CHes[i].volume
         self.cal_point_volume()
 
     def cal_point_volume(self):
 
-        for volume_num, ver in enumerate(self.vertices):
+        print('cal_point_volume')
+        for volume_num, ver in tqdm.tqdm(enumerate(self.vertices)):
             for point_num in ver:
                 self.dict_of_points_and_volumes[point_num].append(self.all_volumes[volume_num])
 
@@ -123,8 +127,9 @@ class DelaunayModel:
                 self.point_volume_dict[num] = 0
 
     def make_empty_dict(self):
+        print('emtpy_dict')
         dict_of_points_and_volumes = dict()
-        for i in range(len(self.points)):
+        for i in tqdm.tqdm(range(len(self.points))):
             dict_of_points_and_volumes[i] = []
         return dict_of_points_and_volumes
 
@@ -145,8 +150,21 @@ class KernelDesityEstimation:
         self.kde = None
         self.name = 'KDE'
 
-    def density_estimation(self):
-        self.kde = gaussian_kde(self.transposed_points)
-        for num, point in tqdm.tqdm(enumerate(self.points)):
-            self.density_dict[num] = self.kde.evaluate(point)[0]
-        return self.density_dict
+    def density_estimation(self, alg='none', model='gaussian'):
+        if alg == 'none':
+            self.kde = gaussian_kde(self.transposed_points)
+            for num, point in tqdm.tqdm(enumerate(self.points)):
+                self.density_dict[num] = self.kde.evaluate(point)[0]
+            return self.density_dict
+        elif alg == 'kd_tree' or alg == 'ball_tree':
+            self.kde = neighbors.KernelDensity(
+                kernel=model,
+                algorithm=alg,
+                bandwidth='silverman',
+                ).fit(self.points)
+
+            indices = [index for index in range(len(self.points))]
+            self.density_dict = dict(zip(indices, list(np.exp(self.kde.score_samples(self.points)))))
+            return self.density_dict
+
+

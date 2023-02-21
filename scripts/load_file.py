@@ -17,12 +17,13 @@ class FileLoader:
         name_info_list = list(
             map(float, cls.extract_file_name_info(os.path.basename(data_path)))
             )
-
+        #first_line = read_line[25]
+        #first_record_array = np.array(list(map(float, first_line.replace('\n', '').replace(' ', '').split('\t'))))
         for line in read_line[25:]:
             record_list = list(map(float, line.replace('\n', '').replace(' ', '').split('\t')))
+            #record_list = (np.array(record_list) - first_record_array).tolist()
             record_list.extend(name_info_list)
             data.append(record_list)
-
         return data
 
     @staticmethod
